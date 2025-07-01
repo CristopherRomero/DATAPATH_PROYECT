@@ -1,0 +1,693 @@
+{
+    "name": "PIPE_ORQUEST",
+    "objectId": "aad66722-65f3-435f-a88a-31a4b6b866e7",
+    "properties": {
+        "activities": [
+            {
+                "name": "Invoke pipeline1",
+                "type": "InvokePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "waitOnCompletion": true,
+                    "operationType": "InvokeFabricPipeline",
+                    "pipelineId": "4b035313-6926-4311-9066-534c1eaa359d",
+                    "workspaceId": "70aaddb2-d383-4455-bf0d-cf214a6bd094"
+                },
+                "externalReferences": {
+                    "connection": "32c37457-b0df-4067-b49e-2b081076e525"
+                }
+            },
+            {
+                "name": "Notebook1",
+                "type": "TridentNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "Invoke pipeline1",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "8e61ebad-a9cf-455e-82b8-ac21ca204b34",
+                    "workspaceId": "70aaddb2-d383-4455-bf0d-cf214a6bd094"
+                }
+            },
+            {
+                "name": "Invoke pipeline2",
+                "type": "InvokePipeline",
+                "dependsOn": [
+                    {
+                        "activity": "Notebook1",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "waitOnCompletion": true,
+                    "operationType": "InvokeFabricPipeline",
+                    "pipelineId": "9bccdf4c-ca9d-4a6b-820f-6c9ad94f2a18",
+                    "workspaceId": "70aaddb2-d383-4455-bf0d-cf214a6bd094",
+                    "parameters": {
+                        "cw_items_caq": [
+                            {
+                                "source": {
+                                    "table": "dim_brokers"
+                                },
+                                "destination": {
+                                    "table": "dim_brokers"
+                                },
+                                "copyActivity": {
+                                    "translator": {
+                                        "type": "TabularTranslator",
+                                        "mappings": [
+                                            {
+                                                "source": {
+                                                    "name": "id_brk",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "id_brk",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "name_brk",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "name_brk",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "region_brk",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "region_brk",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "email_brk",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "email_brk",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            }
+                                        ],
+                                        "typeConversion": true,
+                                        "typeConversionSettings": {
+                                            "allowDataTruncation": true,
+                                            "treatBooleanAsNumber": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "source": {
+                                    "table": "dim_campaigns"
+                                },
+                                "destination": {
+                                    "table": "dim_campaigns"
+                                },
+                                "copyActivity": {
+                                    "translator": {
+                                        "type": "TabularTranslator",
+                                        "mappings": [
+                                            {
+                                                "source": {
+                                                    "name": "id_cam",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "id_cam",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "channel_cam",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "channel_cam",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "name_cam",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "name_cam",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "date_start_cam",
+                                                    "type": "Date",
+                                                    "physicalType": "date"
+                                                },
+                                                "sink": {
+                                                    "name": "date_start_cam",
+                                                    "physicalType": "date"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "date_end_cam",
+                                                    "type": "Date",
+                                                    "physicalType": "date"
+                                                },
+                                                "sink": {
+                                                    "name": "date_end_cam",
+                                                    "physicalType": "date"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "cost_cam",
+                                                    "type": "Double",
+                                                    "physicalType": "double"
+                                                },
+                                                "sink": {
+                                                    "name": "cost_cam",
+                                                    "physicalType": "float"
+                                                }
+                                            }
+                                        ],
+                                        "typeConversion": true,
+                                        "typeConversionSettings": {
+                                            "allowDataTruncation": true,
+                                            "treatBooleanAsNumber": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "source": {
+                                    "table": "dim_clients"
+                                },
+                                "destination": {
+                                    "table": "dim_clients"
+                                },
+                                "copyActivity": {
+                                    "translator": {
+                                        "type": "TabularTranslator",
+                                        "mappings": [
+                                            {
+                                                "source": {
+                                                    "name": "id_cons",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "id_cons",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "name_cons",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "name_cons",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "lastname_cons",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "lastname_cons",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "email_cons",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "email_cons",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "region_cons",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "region_cons",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            }
+                                        ],
+                                        "typeConversion": true,
+                                        "typeConversionSettings": {
+                                            "allowDataTruncation": true,
+                                            "treatBooleanAsNumber": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "source": {
+                                    "table": "dim_projects"
+                                },
+                                "destination": {
+                                    "table": "dim_projects"
+                                },
+                                "copyActivity": {
+                                    "translator": {
+                                        "type": "TabularTranslator",
+                                        "mappings": [
+                                            {
+                                                "source": {
+                                                    "name": "id_pry",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "id_pry",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "name_pry",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "name_pry",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "city_pry",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "city_pry",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "region_pry",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "region_pry",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "date_start_pry",
+                                                    "type": "Date",
+                                                    "physicalType": "date"
+                                                },
+                                                "sink": {
+                                                    "name": "date_start_pry",
+                                                    "physicalType": "date"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "state_pry",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "state_pry",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            }
+                                        ],
+                                        "typeConversion": true,
+                                        "typeConversionSettings": {
+                                            "allowDataTruncation": true,
+                                            "treatBooleanAsNumber": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "source": {
+                                    "table": "dim_properties"
+                                },
+                                "destination": {
+                                    "table": "dim_properties"
+                                },
+                                "copyActivity": {
+                                    "translator": {
+                                        "type": "TabularTranslator",
+                                        "mappings": [
+                                            {
+                                                "source": {
+                                                    "name": "id_prop",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "id_prop",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "id_pry",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "id_pry",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "type",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "type",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "size",
+                                                    "type": "Double",
+                                                    "physicalType": "double"
+                                                },
+                                                "sink": {
+                                                    "name": "size",
+                                                    "physicalType": "float"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "rooms",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "rooms",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "bathrooms",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "bathrooms",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "price",
+                                                    "type": "Double",
+                                                    "physicalType": "double"
+                                                },
+                                                "sink": {
+                                                    "name": "price",
+                                                    "physicalType": "float"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "state",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "state",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            }
+                                        ],
+                                        "typeConversion": true,
+                                        "typeConversionSettings": {
+                                            "allowDataTruncation": true,
+                                            "treatBooleanAsNumber": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "source": {
+                                    "table": "fact_interested"
+                                },
+                                "destination": {
+                                    "table": "fact_interested"
+                                },
+                                "copyActivity": {
+                                    "translator": {
+                                        "type": "TabularTranslator",
+                                        "mappings": [
+                                            {
+                                                "source": {
+                                                    "name": "id_int",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "id_int",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "id_cons",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "id_cons",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "id_prt",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "id_prt",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "id_cam",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "id_cam",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "fecha_emi",
+                                                    "type": "Date",
+                                                    "physicalType": "date"
+                                                },
+                                                "sink": {
+                                                    "name": "fecha_emi",
+                                                    "physicalType": "date"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "half",
+                                                    "type": "String",
+                                                    "physicalType": "string"
+                                                },
+                                                "sink": {
+                                                    "name": "half",
+                                                    "physicalType": "varchar",
+                                                    "length": "8000"
+                                                }
+                                            }
+                                        ],
+                                        "typeConversion": true,
+                                        "typeConversionSettings": {
+                                            "allowDataTruncation": true,
+                                            "treatBooleanAsNumber": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "source": {
+                                    "table": "fact_sales"
+                                },
+                                "destination": {
+                                    "table": "fact_sales"
+                                },
+                                "copyActivity": {
+                                    "translator": {
+                                        "type": "TabularTranslator",
+                                        "mappings": [
+                                            {
+                                                "source": {
+                                                    "name": "id_sale",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "id_sale",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "id_prop",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "id_prop",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "id_cons",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "id_cons",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "id_brk",
+                                                    "type": "Int32",
+                                                    "physicalType": "integer"
+                                                },
+                                                "sink": {
+                                                    "name": "id_brk",
+                                                    "physicalType": "int"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "date_sale",
+                                                    "type": "Date",
+                                                    "physicalType": "date"
+                                                },
+                                                "sink": {
+                                                    "name": "date_sale",
+                                                    "physicalType": "date"
+                                                }
+                                            },
+                                            {
+                                                "source": {
+                                                    "name": "price_sale",
+                                                    "type": "Double",
+                                                    "physicalType": "double"
+                                                },
+                                                "sink": {
+                                                    "name": "price_sale",
+                                                    "physicalType": "float"
+                                                }
+                                            }
+                                        ],
+                                        "typeConversion": true,
+                                        "typeConversionSettings": {
+                                            "allowDataTruncation": true,
+                                            "treatBooleanAsNumber": false
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "externalReferences": {
+                    "connection": "32c37457-b0df-4067-b49e-2b081076e525"
+                }
+            }
+        ],
+        "lastModifiedByObjectId": "d5e321d4-a60c-4275-b4b2-724e59447ddb",
+        "lastPublishTime": "2025-07-01T03:03:33Z"
+    }
+}
